@@ -1,0 +1,433 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-color: lightblue;
+            font-family: Arial, Helvetica;
+        }
+        html, body, form {
+            margin: 0;
+            height: 100%;
+        }
+
+        #r_history {
+            font-size: smaller;
+        }
+        #r_text {
+            font-size: larger;
+            border: 5px solid blue;
+            padding: 10px;
+            margin: 20px;
+        }
+        .button {
+            height: 40px;
+            width: 150px;
+            background-color: darkblue;
+            border: 2px solid;
+            color: white;
+            text-align: center;
+            font: bold 20px arial, verdana;
+        }
+
+        .btngroup div {
+            float: left;
+           
+        }
+
+        .btngroup:after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+    <form style="border:1px solid blue;">
+        <div style="position: relative; height: 100%;">
+            <div id="r_name"></div>
+
+            <div id="r_text"></div>
+            <div id="r_pic"></div>
+            <div id="r_choice1"></div>
+            <div class="btngroup">
+                <div class="button" onclick="fnStartOver();" style="visibility:visible;">Start Over</div>
+                <div class="button" onclick="fnProcessURLAction(actionsword);">Sword</div>
+                <div class="button" onclick="fnProcessURLAction(actionshield);">Shield</div>
+                <div class="button" onclick="fnProcessURLAction(actiondragon);">Dragon</div>
+                <div class="button" onclick="fnProcessURLAction(actionmoonkey);">Moon Key</div>
+                <div class="button" onclick="fnProcessURLAction(actionsecretdoor);">Secret Door</div>
+                <div class="button" onclick="fnProcessURLAction(actionicepick);">Treasure Chest</div>
+                <div class="button" onclick="fnProcessURLAction(actiontreasurechest);">Ice Pick</div>
+            </div>
+            <p></p><p></p><div id="r_history"></div>
+            <div id="r_inv" style="position: absolute; bottom: 5px;"></div>
+        </div>
+    </form>
+    <!--Game Flow functions-->
+    <script>
+        var actionsword = "lo9ikju7yhgt";
+        var actionshield = "6u7ytgfrdews";
+        var actiondragon = "3ecfghu7i9";
+        var actionmoonkey = "p0l9n9ijuyht";
+        var actionsecretdoor = "34rfdesw5t";
+        var actionicepick = "ccvfrewtyhgtuj";
+        var actiontreasurechest = "polkijuhygtf";
+        function fnGetInventory() {
+            var inv = "";
+            inv = inv + fnGetInventoryItem("Sword");
+            inv = inv + fnGetInventoryItem("Shield");
+            inv = inv + fnGetInventoryItem("MoonKey");
+            inv = inv + fnGetInventoryItem("IcePick");
+            inv = inv.substring(0, inv.length - 2);
+            if (inv.length > 3)
+                return "You have a " + inv;
+            else
+                return "You have nothing yet. Look for magical QR Codes.";
+        }
+        function fnGetSimpleNameForURLAction(urlaction) {
+            switch (urlaction) {
+                case actionsword:
+                    urlaction = "Sword";
+                    break;
+                case actionshield:
+                    urlaction = "Shield";
+                    break;
+                case actiondragon:
+                    urlaction = "Dragon";
+                    break;
+                case actionmoonkey:
+                    urlaction = "MoonKey";
+                    break;
+                case actionsecretdoor:
+                    urlaction = "SecretDoor";
+                    break;
+                case actionicepick:
+                    urlaction = "TreasureChest";
+                    break;
+                case actiontreasurechest:
+                    urlaction = "IcePick";
+                    break;
+                default:
+                    urlaction = "";
+                    break;
+            }
+            return urlaction;
+        }
+        function fnDoAction(action) {
+            switch (action) {
+                case "Sword":
+                    fnSword();
+                    break;
+                case "Shield":
+                    fnShield();
+                    break;
+                case "Dragon":
+                    fnDragon();
+                    break;
+                case "MoonKey":
+                    fnMoonKey();
+                    break;
+                case "SecretDoor":
+                    fnSecretDoor();
+                    break;
+                case "TreasureChest":
+                    fnTreasureChest();
+                    break;
+                case "IcePick":
+                    fnIcePick();
+                    break;
+            }
+        }
+        function fnSword() {
+            var inv = fnGetCountOfThisInInventory("Sword");
+            var scans = fnGetCount("Sword");
+            if (inv == 0) {
+                fnAddToInventory("Sword", 1);
+                fnNotifyUser("You have a sword!");
+                var invMoon = fnGetCountOfThisInInventory("MoonKey");
+                var invShield = fnGetCountOfThisInInventory("Shield");
+                if (invMoon && invMoon > 0 && invShield && invShield > 0)
+                    fnNotifyUser("You now have all you need to slay the dragon!");
+                return;
+            }
+            if (scans == 2) {
+                fnNotifyUser("Dude, you already have a sword!");
+            }
+            else {
+                if (scans == 3) {
+                    fnNotifyUser("Alright, alright!  You can have another sword!");
+                    fnAddToInventory("Sword", 2);
+                }
+                else {
+                    fnNotifyUser("The armory is now closed!  Now go kill a dragon!");
+                }
+            }
+        }
+        function fnShield() {
+            var inv = fnGetCountOfThisInInventory("Shield");
+            if (inv == 0) {
+                fnAddToInventory("Shield", 1);
+                fnNotifyUser("You have a shield!");
+            }
+            else {
+                fnNotifyUser("You can only carry one shield!");
+            }
+        }
+        function fnMoonKey() {
+            var inv = fnGetCountOfThisInInventory("MoonKey");
+            var scans = fnGetCount("MoonKey");
+            if (inv == 0) {
+                fnAddToInventory("MoonKey", 1);
+                fnNotifyUser("You have a moon key!");
+            }
+            else {
+                fnNotifyUser("There is only one moon key, and you already have it!");
+            }
+        }
+        function fnIcePick() {
+            var inv = fnGetCountOfThisInInventory("IcePick");
+            var scans = fnGetCount("IcePick");
+            if (inv == 0) {
+                fnAddToInventory("IcePick", 1);
+                fnNotifyUser("You have an ice pick!");
+            }
+            else {
+                fnAddToInventory("IcePick", parseInt(inv) + 1);
+                fnNotifyUser("You have another ice pick!");
+            }
+        }
+        function fnSecretDoor() {
+            var msg = "You've found the secret door";
+            var inv = fnGetCountOfThisInInventory("MoonKey");
+            if (inv > 0) {
+                msg = msg + " and you opened it with your Moon Key!";
+                fnAddToInventory("SecretDoor", 1);
+                var x = "The key only works at 8 minutes before or after the top or bottom of the hour!";
+            }
+            else {
+                var inv = fnGetCountOfThisInInventory("IcePick");
+                if (inv == 0) {
+                    msg = msg + " but you don't see any way to open it.";
+                }
+                if (inv == 1) {
+                    msg = msg + " but you need a way to open it.  The ice pick won't work because you don't see a keyhole.";
+                }
+                if (inv > 1) {
+                    msg = msg + " but you need a way to open it.  All the ice picks in the world won't help because you don't see a keyhole.";
+                }
+            }
+            fnNotifyUser(msg);
+        }
+        function fnDragon() {
+            var msg = "";
+            var inv = fnGetCountOfThisInInventory("Shield");
+            if (inv == 0) {
+                msg = msg + "A Dragon!!  You're mom won't let you go anywhere near a dragon unless you have your shield!";
+                fnNotifyUser(msg);
+                return;
+            }
+            inv = fnGetCountOfThisInInventory("Sword");
+            if (inv == 0) {
+                msg = msg + "Do you think this dragon is going to talk?  Not a chance!  You need to go get a sword!";
+                fnNotifyUser(msg);
+                return;
+            }
+            var inv = fnGetCountOfThisInInventory("SecretDoor");
+            if (inv > 0) {
+                msg = msg + "The dragon sees you in the tunnel and breathes fire, but you deflect it with your shield.  You know how to get past the dragon!";
+                fnAddToInventory("DefeatedDragon", 1);
+                fnNotifyUser(msg);
+                return;
+            }
+            inv = fnGetCountOfThisInInventory("DragonConfrontations");
+            if (inv == 0) {
+                msg = msg + "On second thought, this dragon is much too tough to fight head on.  Maybe you can sneak past him.  Look for another way.";
+                fnAddToInventory("DragonConfrontations", 1);
+                fnNotifyUser(msg);
+                return;
+            }
+            if (inv == 1) {
+                msg = msg + "No really.  Take my advice. This will not end well for you.";
+                fnAddToInventory("DragonConfrontations", parseInt(inv) + 1);
+                fnNotifyUser(msg);
+                return;
+            }
+            if (inv > 1) {
+                msg = msg + "You are persistent!  The dragon breathes a great flame destroying your shield.  Your mother runs out and snatches you from the jaws of death!";
+                fnAddToInventory("DragonConfrontations", parseInt(inv) + 1);
+                fnAddToInventory("Shield", 0);
+                fnNotifyUser(msg);
+                return;
+            }
+        }
+        function fnTreasureChest() {
+            var msg = "";
+            var inv = fnGetCountOfThisInInventory("DefeatedDragon");
+            if (inv == 0) {
+                msg = msg + "Hmm. Nothing here.  Come back later.  After you have defeated the dragon.";
+                fnNotifyUser(msg);
+                return;
+            }
+            inv = fnGetCountOfThisInInventory("IcePick");
+            if (inv == 0) {
+                msg = msg + "You found a treause chest!  But you don't know how to open the lock.  Maybe you can find a tool for that.";
+                fnNotifyUser(msg);
+                return;
+            }
+            if (inv > 0) {
+                msg = msg + "You found a treause chest and picked it open with ";
+                if (inv == 1)
+                    msg = msg + "your lock pick.";
+                else
+                    msg = msg + "one of your lock picks.";
+                fnNotifyUser(msg);
+            }
+            msg = "You did it!  You completed the first RPGKC Quest!  The treasure is all yours!";
+            fnNotifyUser(msg);
+        }
+    </script>
+    <!--App Framework functions-->
+    <script>
+        function fnStartOver() {
+            localStorage.clear();
+            fnStartApp();
+        }
+        function fnAddToHistory(action) {
+            fnIncrementCount("countAll");
+            fnIncrementCount("count" + action);
+
+            var history = JSON.parse(localStorage.getItem("history"));
+            if (history && history.length) {
+            }
+            else {
+                history = [];
+            }
+            var cd = new Date().toLocaleString()
+            cd.concat(":");
+            cd.concat(new Date().getMilliseconds());
+            history.push([cd, action]);
+            localStorage.setItem("history", JSON.stringify(history));
+        }
+        function fnStartApp() {
+            var name = localStorage.getItem("name");
+            while (stringIsEmpty(name)) {
+                name = getName();
+                if (name == "cancel") {
+                    if (confirm("A name is required to play the game.  Press OK to leave the site or Cancel to stay and play.")) {
+                        window.location = "http://www.rpgkc.org/";
+                    }
+                    else {
+                        location.reload();
+                    }
+                }
+                else {
+                    localStorage.setItem("name", name);
+                }
+            }
+            fnInvokeActionFromURL();
+            fnUpdatePage();
+        }
+        function fnUpdatePage() {
+            document.getElementById("r_name").innerHTML = "Player Name: " + localStorage.getItem("name");
+            document.getElementById("r_history").innerHTML = JSON.parse(localStorage.getItem("history"));
+            document.getElementById("r_inv").innerHTML = fnGetInventory();
+            document.getElementById("r_text").innerHTML = fnGetDisplayMessage();
+        }
+        function fnInvokeActionFromURL() {
+            var paramsString = location.search.slice(1);
+            var searchParams = new URLSearchParams(paramsString);
+            var urlaction = searchParams.get("action");
+            if (urlaction) {
+                fnProcessURLAction(urlaction);
+            }
+            var urlaction = searchParams.get("btns");
+            if (urlaction == "show") {
+                document.getElementsByClassName('btngroup')[0].style.visibility = 'visible';
+                document.getElementById("r_history").style.visibility = 'visible';
+            }
+            else {
+                document.getElementsByClassName('btngroup')[0].style.visibility = 'hidden';
+                document.getElementById("r_history").style.visibility = 'hidden';
+            }
+
+        }
+        function fnProcessURLAction(urlaction) {
+            var action = fnGetSimpleNameForURLAction(urlaction);
+            if (action != "") {
+                fnAddToHistory(action);
+                fnDoAction(action);
+                fnUpdatePage();
+            }
+        }
+        function fnGetInventoryItem(item) {
+            var count = fnGetCountOfThisInInventory(item);
+            if (count > 0) {
+                var msg = count + " " + item;
+                if (count > 1) {
+                    msg = msg + "s";
+                }
+                return msg + ", ";
+            }
+            return "";
+        }
+        function fnGetCountOfThisInInventory(name) {
+            var inv = localStorage.getItem("inv" + name);
+            if (inv) {
+                return inv;
+            }
+            else {
+                return 0;
+            }
+        }
+        function fnAddToInventory(name, inv) {
+            return localStorage.setItem("inv" + name, inv);
+        }
+        function fnNotifyUser(message)
+        {
+            localStorage.setItem("displaymsg", message);
+            //alert(message);
+        }
+        function fnGetDisplayMessage()
+        {
+            return localStorage.getItem("displaymsg");
+        }
+    </script>
+    <!--Helper functions-->
+    <script>
+        function fnIncrementCount(countname) {
+            var count = parseInt(localStorage.getItem(countname)) || 0;
+            count = count + 1;
+            localStorage.setItem(countname, count);
+        }
+        function stringIsEmpty(input) {
+            if (input == "null" || !input || input.trim() == "")
+                return true;
+            return false;
+        }
+        function fnGetCount(name) {
+            return parseInt(localStorage.getItem("count" + name)) || 0;
+        }
+        function getName() {
+            var name = prompt("Please enter your name");
+            if (stringIsEmpty(name)) {
+                name = "cancel";
+            }
+            return name;
+        }
+        // Check browser support
+        if (typeof (Storage) !== "undefined") {
+            fnStartApp();
+        }
+        else {
+            document.getElementById("r_name").innerHTML = "Sorry, your browser does not support Web Storage.";
+        }
+
+    </script>
+
+</body>
+</html>
+<!--https://www.qrstuff.com/-->

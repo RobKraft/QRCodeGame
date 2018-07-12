@@ -142,23 +142,23 @@
             var scans = fnGetCount("Sword");
             if (inv == 0) {
                 fnAddToInventory("Sword", 1);
-                alert("You have a sword!");
+                fnNotifyUser("You have a sword!");
                 var invMoon = fnGetCountOfThisInInventory("MoonKey");
                 var invShield = fnGetCountOfThisInInventory("Shield");
                 if (invMoon && invMoon > 0 && invShield && invShield > 0)
-                    alert("You now have all you need to slay the dragon!");
+                    fnNotifyUser("You now have all you need to slay the dragon!");
                 return;
             }
             if (scans == 2) {
-                alert("Dude, you already have a sword!");
+                fnNotifyUser("Dude, you already have a sword!");
             }
             else {
                 if (scans == 3) {
-                    alert("Alright, alright!  You can have another sword!");
+                    fnNotifyUser("Alright, alright!  You can have another sword!");
                     fnAddToInventory("Sword", 2);
                 }
                 else {
-                    alert("The armory is now closed!  Now go kill a dragon!");
+                    fnNotifyUser("The armory is now closed!  Now go kill a dragon!");
                 }
             }
         }
@@ -166,10 +166,10 @@
             var inv = fnGetCountOfThisInInventory("Shield");
             if (inv == 0) {
                 fnAddToInventory("Shield", 1);
-                alert("You have a shield!");
+                fnNotifyUser("You have a shield!");
             }
             else {
-                alert("You can only carry one shield!");
+                fnNotifyUser("You can only carry one shield!");
             }
         }
         function fnMoonKey() {
@@ -177,10 +177,10 @@
             var scans = fnGetCount("MoonKey");
             if (inv == 0) {
                 fnAddToInventory("MoonKey", 1);
-                alert("You have a moon key!");
+                fnNotifyUser("You have a moon key!");
             }
             else {
-                alert("There is only one moon key, and you already have it!");
+                fnNotifyUser("There is only one moon key, and you already have it!");
             }
         }
         function fnIcePick() {
@@ -188,11 +188,11 @@
             var scans = fnGetCount("IcePick");
             if (inv == 0) {
                 fnAddToInventory("IcePick", 1);
-                alert("You have an ice pick!");
+                fnNotifyUser("You have an ice pick!");
             }
             else {
                 fnAddToInventory("IcePick", parseInt(inv) + 1);
-                alert("You have another ice pick!");
+                fnNotifyUser("You have another ice pick!");
             }
         }
         function fnSecretDoor() {
@@ -215,47 +215,47 @@
                     msg = msg + " but you need a way to open it.  All the ice picks in the world won't help because you don't see a keyhole.";
                 }
             }
-            alert(msg);
+            fnNotifyUser(msg);
         }
         function fnDragon() {
             var msg = "";
             var inv = fnGetCountOfThisInInventory("Shield");
             if (inv == 0) {
                 msg = msg + "A Dragon!!  You're mom won't let you go anywhere near a dragon unless you have your shield!";
-                alert(msg);
+                fnNotifyUser(msg);
                 return;
             }
             inv = fnGetCountOfThisInInventory("Sword");
             if (inv == 0) {
                 msg = msg + "Do you think this dragon is going to talk?  Not a chance!  You need to go get a sword!";
-                alert(msg);
+                fnNotifyUser(msg);
                 return;
             }
             var inv = fnGetCountOfThisInInventory("SecretDoor");
             if (inv > 0) {
                 msg = msg + "The dragon sees you in the tunnel and breathes fire, but you deflect it with your shield.  You know how to get past the dragon!";
                 fnAddToInventory("DefeatedDragon", 1);
-                alert(msg);
+                fnNotifyUser(msg);
                 return;
             }
             inv = fnGetCountOfThisInInventory("DragonConfrontations");
             if (inv == 0) {
                 msg = msg + "On second thought, this dragon is much too tough to fight head on.  Maybe you can sneak past him.  Look for another way.";
                 fnAddToInventory("DragonConfrontations", 1);
-                alert(msg);
+                fnNotifyUser(msg);
                 return;
             }
             if (inv == 1) {
                 msg = msg + "No really.  Take my advice. This will not end well for you.";
                 fnAddToInventory("DragonConfrontations", parseInt(inv) + 1);
-                alert(msg);
+                fnNotifyUser(msg);
                 return;
             }
             if (inv > 1) {
                 msg = msg + "You are persistent!  The dragon breathes a great flame destroying your shield.  Your mother runs out and snatches you from the jaws of death!";
                 fnAddToInventory("DragonConfrontations", parseInt(inv) + 1);
                 fnAddToInventory("Shield", 0);
-                alert(msg);
+                fnNotifyUser(msg);
                 return;
             }
         }
@@ -264,13 +264,13 @@
             var inv = fnGetCountOfThisInInventory("DefeatedDragon");
             if (inv == 0) {
                 msg = msg + "Hmm. Nothing here.  Come back later.  After you have defeated the dragon.";
-                alert(msg);
+                fnNotifyUser(msg);
                 return;
             }
             inv = fnGetCountOfThisInInventory("IcePick");
             if (inv == 0) {
                 msg = msg + "You found a treause chest!  But you don't know how to open the lock.  Maybe you can find a tool for that.";
-                alert(msg);
+                fnNotifyUser(msg);
                 return;
             }
             if (inv > 0) {
@@ -279,10 +279,10 @@
                     msg = msg + "your lock pick.";
                 else
                     msg = msg + "one of your lock picks.";
-                alert(msg);
+                fnNotifyUser(msg);
             }
             msg = "You did it!  You completed the first RPGKC Quest!  The treasure is all yours!";
-            alert(msg);
+            fnNotifyUser(msg);
         }
     </script>
     <!--App Framework functions-->
@@ -379,6 +379,10 @@
         }
         function fnAddToInventory(name, inv) {
             return localStorage.setItem("inv" + name, inv);
+        }
+        function fnNotifyUser(message)
+        {
+            alert(message);
         }
     </script>
     <!--Helper functions-->

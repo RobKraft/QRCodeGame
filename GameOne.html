@@ -5,15 +5,26 @@
     <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        html {
+            margin: 10px;
+            height: 95%;
+            border: 1px solid blue;
+        }
         body {
             background-color: lightblue;
             font-family: Arial, Helvetica;
-        }
-        html, body, form {
-            margin: 0;
+            margin: 0px;
             height: 100%;
         }
-
+        form {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            /*margin: 0px;*/
+            height: 100%;
+        }
+        /*https://github.com/NUKnightLab/juxtapose/issues/105*/
         #r_history {
             font-size: smaller;
         }
@@ -41,7 +52,7 @@
     </style>
 </head>
 <body>
-    <form style="border:1px solid blue;">
+    <form>
         <div style="position: relative; height: 100%;">
             <div id="r_name"></div>
 

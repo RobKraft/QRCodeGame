@@ -339,7 +339,7 @@
         }
         function fnUpdatePage() {
             document.getElementById("r_name").innerHTML = "Player Name: " + localStorage.getItem("name");
-            document.getElementById("r_history").innerHTML = JSON.parse(localStorage.getItem("history"));
+            //document.getElementById("r_history").innerHTML = JSON.parse(localStorage.getItem("history"));
             document.getElementById("r_inv").innerHTML = fnGetInventory();
         }
         function fnInvokeActionFromURL() {

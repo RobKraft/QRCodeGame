@@ -251,7 +251,7 @@
             }
             var inv = fnGetCountOfThisInInventory("SecretDoor");
             if (inv > 0) {
-                msg = msg + "The dragon sees you in the tunnel and breathes fire, but you deflect it with your shield.  You know how to get past the dragon!";
+                msg = msg + "The dragon sees you in the tunnel and breathes fire, but you deflect it with your shield.  You know how to get past the dragon using the Secret Door!";
                 fnAddToInventory("DefeatedDragon", 1);
                 fnNotifyUser(msg);
                 return;
@@ -299,7 +299,7 @@
                     msg = msg + "one of your lock picks.";
                 fnNotifyUser(msg);
             }
-            msg = "You did it!  You completed the first RPGKC Quest!  The treasure is all yours!";
+            msg = "You did it!  You completed the Midwest GameFest 2018 Quest! Congratulations! You may also show this message to registration to be rewarded with a free raffle ticket!";
             fnNotifyUser(msg);
         }
     </script>
@@ -346,7 +346,7 @@
         }
         function fnUpdatePage() {
             document.getElementById("r_name").innerHTML = "Player Name: " + localStorage.getItem("name");
-            document.getElementById("r_history").innerHTML = JSON.parse(localStorage.getItem("history"));
+            //document.getElementById("r_history").innerHTML = JSON.parse(localStorage.getItem("history"));
             document.getElementById("r_inv").innerHTML = fnGetInventory();
             document.getElementById("r_text").innerHTML = fnGetDisplayMessage();
         }

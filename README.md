@@ -6,3 +6,6 @@ No back end server is required.  The app uses the localstorage of the browser to
 In the basic first example, GameOne.html, there are 7 possible actions, thus 7 barcodes need to be created for the site.  You will need to identify what the URL will be for the site, such as https://www.rpgkc.org/GameOne.html, and then create 7 bar codes with 7 different URLs like: https://www.rpgkc.org/GameOne.html?action=lo9ikju7yhgt  and https://www.rpgkc.org/GameOne.html?action=6u7ytgfrdews.
 I intentionlly chose cryptic action names to keep more savvy players from easily replacing the action with something more simple like "Sword", "Dragon", or "1" and "2".  In the javascript, you match each of the codes to an action that is easier for you, the programmer, to understand.
 To assist developers with modifying and debugging the application, you can add an additional parameter &btns=show to the URL in order to see buttons that simulate what the QR codes do; as well as an activity history of each action taken.
+
+GameOne.html uses dialog prompts to provide messages to users.  I found that a little annoying.
+GameTwo.html shows messages in a label on the form.  Other than that, it works the same as GameOne.html

@@ -1,0 +1,444 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html {
+            margin: 10px;
+            height: 95%;
+            border: 1px solid black;
+        }
+
+        body {
+            background-color: crimson;
+            font-family: Arial, Helvetica;
+            margin: 0px;
+            height: 100%;
+        }
+
+        form {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            /*margin: 0px;*/
+            height: 100%;
+        }
+        /*https://github.com/NUKnightLab/juxtapose/issues/105*/
+        #r_history {
+            font-size: smaller;
+        }
+        #r_text {
+            font-size: larger;
+            border: 5px solid black;
+            padding: 10px;
+            margin: 20px;
+            color: white;
+        }
+        .button {
+            height: 40px;
+            width: 150px;
+            background-color: dodgerblue;
+            border: 2px solid;
+            color: white;
+            text-align: center;
+            font: bold 20px arial, verdana;
+        }
+
+        .btngroup div {
+            float: left;
+           
+        }
+
+        .btngroup:after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <div style="position: relative; height: 100%;">
+            <div id="r_name" style="color:white"></div>
+
+            <div id="r_text"></div>
+            <div id="r_pic"></div>
+            <div id="r_choice1"></div>
+            <div class="btngroup">
+                <div class="button" onclick="fnStartOver();" style="visibility:visible;">Start Over</div>
+                <div class="button" onclick="fnProcessURLAction(actionrum);">Rum</div>
+                <div class="button" onclick="fnProcessURLAction(actionShovel);">Shovel</div>
+                <div class="button" onclick="fnProcessURLAction(actionparrot);">Parrot</div>
+                <div class="button" onclick="fnProcessURLAction(actiontreasuremap);">Treasure Map</div>
+                <div class="button" onclick="fnProcessURLAction(actionship);">Ship</div>
+                <div class="button" onclick="fnProcessURLAction(actiontreasurechest);">Treasure Chest</div>
+                <div class="button" onclick="fnProcessURLAction(actioncracker);">Cracker</div>
+            </div>
+            <p></p><p></p><div id="r_history"></div>
+            <div id="r_inv" style="position: absolute; bottom: 5px; color: white"></div>
+        </div>
+    </form>
+    <!--Game Flow functions-->
+    <script>
+        var actionrum = "lo9ikju7yhgt";
+        var actionShovel = "6u7ytgfrdews";
+        var actionparrot = "3ecfghu7i9";
+        var actiontreasuremap = "p0l9n9ijuyht";
+        var actionship = "34rfdesw5t";
+        var actioncracker = "ccvfrewtyhgtuj";
+        var actiontreasurechest = "polkijuhygtf";
+        function fnGetInventory() {
+            var inv = "";
+            inv = inv + fnGetInventoryItem("Rum");
+            inv = inv + fnGetInventoryItem("Shovel");
+            inv = inv + fnGetInventoryItem("treasuremap");
+            inv = inv + fnGetInventoryItem("cracker");
+            inv = inv.substring(0, inv.length - 2);
+            if (inv.length > 3)
+                return "You have a " + inv;
+            else
+                return "You got nuthin but your bones. Look for magical QR Codes to find things.";
+        }
+        function fnGetSimpleNameForURLAction(urlaction) {
+            switch (urlaction) {
+                case actionrum:
+                    urlaction = "Rum";
+                    break;
+                case actionShovel:
+                    urlaction = "Shovel";
+                    break;
+                case actionparrot:
+                    urlaction = "Parrot";
+                    break;
+                case actiontreasuremap:
+                    urlaction = "treasuremap";
+                    break;
+                case actionship:
+                    urlaction = "Ship";
+                    break;
+                case actiontreasurechest:
+                    urlaction = "TreasureChest";
+                    break;
+                case actioncracker:
+                    urlaction = "cracker";
+                    break;
+                default:
+                    urlaction = "";
+                    break;
+            }
+            return urlaction;
+        }
+        function fnDoAction(action) {
+            switch (action) {
+                case "Rum":
+                    fnRum();
+                    break;
+                case "Shovel":
+                    fnShovel();
+                    break;
+                case "Parrot":
+                    fnParrot();
+                    break;
+                case "treasuremap":
+                    fntreasuremap();
+                    break;
+                case "Ship":
+                    fnShip();
+                    break;
+                case "TreasureChest":
+                    fnTreasureChest();
+                    break;
+                case "cracker":
+                    fncracker();
+                    break;
+            }
+        }
+        function fnRum() {
+            var inv = fnGetCountOfThisInInventory("Rum");
+            var scans = fnGetCount("Rum");
+            if (inv == 0) {
+                fnAddToInventory("Rum", 1);
+                fnNotifyUser("Yo ho ho, it's a bottle of rum!");
+                var invMap = fnGetCountOfThisInInventory("treasuremap");
+                var invShovel = fnGetCountOfThisInInventory("Shovel");
+                if (invMap && invMap > 0 && invShovel && invShovel > 0)
+                    fnNotifyUser("Yo ho ho, it's a bottle of rum! You can use this to buy some mateys to crew your ship!");
+                return;
+            }
+            if (scans == 2) {
+                fnNotifyUser("Avast! You already have a bottle of rum!");
+            }
+            else {
+                if (scans == 3) {
+                    fnNotifyUser("Arrr, alright!  You can have another bottle of rum!");
+                    fnAddToInventory("Rum", 2);
+                }
+                else {
+                    fnNotifyUser("We're making more rum.  Come back later if you run out you scurvy dogs.");
+                }
+            }
+        }
+        function fnShovel() {
+            var inv = fnGetCountOfThisInInventory("Shovel");
+            if (inv == 0) {
+                fnAddToInventory("Shovel", 1);
+                fnNotifyUser("Blimey! You have a Shovel!");
+            }
+            else {
+                fnNotifyUser("Arr, you can only carry one Shovel!");
+            }
+        }
+        function fntreasuremap() {
+            var inv = fnGetCountOfThisInInventory("treasuremap");
+            var scans = fnGetCount("treasuremap");
+            if (inv == 0) {
+                fnAddToInventory("treasuremap", 1);
+                fnNotifyUser("You found a Treasure Map!");
+            }
+            else {
+                fnNotifyUser("There is only one Treasure Map, and you already have it!");
+            }
+        }
+        function fncracker() {
+            var inv = fnGetCountOfThisInInventory("cracker");
+            var scans = fnGetCount("cracker");
+            if (inv == 0) {
+                fnAddToInventory("cracker", 1);
+                fnNotifyUser("You found a cracker!");
+            }
+            else {
+                fnAddToInventory("cracker", parseInt(inv) + 1);
+                fnNotifyUser("You have another cracker! Yum!");
+            }
+        }
+        function fnShip() {
+            var invship = fnGetCountOfThisInInventory("Ship");
+            if (invship > 0) {
+                var msg = "You've already commandeered one ship.  You can't get another you scurvy dog!";
+                fnNotifyUser(msg);
+                return;
+            }
+            var msg = "You see a ship in the harbor";
+            var inv = fnGetCountOfThisInInventory("treasuremap");
+            var invrum = fnGetCountOfThisInInventory("Rum");
+            if (inv > 0) {
+                if (invrum > 0) {
+                    msg = msg + " and you hired a crew using the rum you have acquired!";
+                    fnAddToInventory("Ship", 1);
+                    fnAddToInventory("Rum", invrum-1);
+                }
+                else {
+                    msg = msg + ", but you need something to convince a crew to sail for you.";
+                }
+            }
+            else {
+                msg = msg + " but you don't know where to sail it to.  Google Maps doesn't exist yet. Find a treasure map and come back Matey.";
+            }
+            fnNotifyUser(msg);
+        }
+        function fnParrot() {
+            var msg = "";
+            var inv = fnGetCountOfThisInInventory("Ship");
+            if (inv == 0) {
+                msg = msg + "An island exists somewhere in the ocean, but you will need a map, and a ship, to sail there.";
+                fnNotifyUser(msg);
+                return;
+            }
+            inv = fnGetCountOfThisInInventory("cracker");
+            if (inv > 0) {
+                msg = msg + "You sailed the ship to the island with your motley crew.  You give Polly the Parrot a cracker so she won't follow you.";
+                fnNotifyUser(msg);
+                fnAddToInventory("DefeatedParrot", 1);
+                return;
+            }
+            msg = msg + "You sailed the ship to the island with your motley crew.  You sneak away with your map to find the treasure, but a Parrot is following you squawking 'Polly wants a cracker'.";
+            fnNotifyUser(msg);
+        }
+        function fnTreasureChest() {
+            var msg = "";
+            var inv = fnGetCountOfThisInInventory("treasuremap");
+            if (inv == 0) {
+                msg = msg + "You can't find this treasure chest without first getting a treasure map in your hands.";
+                fnNotifyUser(msg);
+                return;
+            }
+            var inv = fnGetCountOfThisInInventory("Ship");
+            if (inv == 0) {
+                msg = msg + "You need a ship before you can sail to the island that has this treasure chest.  Come back after you have commandeered that boat.";
+                fnNotifyUser(msg);
+                return;
+            }
+            var inv = fnGetCountOfThisInInventory("DefeatedParrot");
+            if (inv == 0) {
+                msg = msg + "Shiver me timbers but his Parrot is raising a racket!  You need to distract it so you can sneak off and hunt for that booty!";
+                fnNotifyUser(msg);
+                return;
+            }
+            inv = fnGetCountOfThisInInventory("Shovel");
+            if (inv == 0) {
+                msg = msg + "Blimey! You found where the treasure is buried.  But it is need under the sand.  You need a shovel!";
+                fnNotifyUser(msg);
+                return;
+            }
+            if (inv > 0) {
+                msg = msg + "Ahoy! With your shovel you uncover the chest full of Pieces of Eight and other booty!";
+                fnNotifyUser(msg);
+            }
+            msg = "You did it!  You completed the Midwest GameFest 2019 Quest! Congratulations! You may also show this message to registration to be rewarded with a free raffle ticket!";
+            fnNotifyUser(msg);
+        }
+    </script>
+    <!--App Framework functions-->
+    <script>
+        function fnStartOver() {
+            localStorage.clear();
+            fnStartApp();
+        }
+        function fnAddToHistory(action) {
+            fnIncrementCount("countAll");
+            fnIncrementCount("count" + action);
+
+            var history = JSON.parse(localStorage.getItem("history"));
+            if (history && history.length) {
+            }
+            else {
+                history = [];
+            }
+            var cd = new Date().toLocaleString()
+            cd.concat(":");
+            cd.concat(new Date().getMilliseconds());
+            history.push([cd, action]);
+            localStorage.setItem("history", JSON.stringify(history));
+        }
+        function fnStartApp() {
+            var name = localStorage.getItem("name");
+            while (stringIsEmpty(name)) {
+                name = getName();
+                if (name == "cancel") {
+                    if (confirm("A name is required to play the game.  Press OK to leave the site or Cancel to stay and play.")) {
+                        window.location = "http://www.rpgkc.org/";
+                    }
+                    else {
+                        location.reload();
+                    }
+                }
+                else {
+                    localStorage.setItem("name", name);
+                }
+            }
+            fnInvokeActionFromURL();
+            fnUpdatePage();
+        }
+        function fnUpdatePage() {
+            document.getElementById("r_name").innerHTML = "Player Name: " + localStorage.getItem("name");
+            //document.getElementById("r_history").innerHTML = JSON.parse(localStorage.getItem("history"));
+            document.getElementById("r_inv").innerHTML = fnGetInventory();
+            document.getElementById("r_text").innerHTML = fnGetDisplayMessage();
+        }
+        function fnInvokeActionFromURL() {
+            var paramsString = location.search.slice(1);
+            var searchParams = new URLSearchParams(paramsString);
+            var urlaction = searchParams.get("action");
+            if (urlaction) {
+                fnProcessURLAction(urlaction);
+            }
+            var urlaction = searchParams.get("btns");
+            if (urlaction == "show") {
+                document.getElementsByClassName('btngroup')[0].style.visibility = 'visible';
+                document.getElementById("r_history").style.visibility = 'visible';
+            }
+            else {
+                document.getElementsByClassName('btngroup')[0].style.visibility = 'hidden';
+                document.getElementById("r_history").style.visibility = 'hidden';
+            }
+
+        }
+        function fnProcessURLAction(urlaction) {
+            var action = fnGetSimpleNameForURLAction(urlaction);
+            if (action != "") {
+                fnAddToHistory(action);
+                fnDoAction(action);
+                fnUpdatePage();
+            }
+        }
+        function fnGetInventoryItem(item) {
+            var count = fnGetCountOfThisInInventory(item);
+            if (count > 0) {
+                var msg = count + " " + item;
+                if (item == "Rum") {
+                    if (count > 1) {
+                        msg = count + " bottles of rum";
+                    }
+                    else {
+                        msg = count + " bottle of rum";
+                    }
+                }
+                else {
+                if (count > 1) {
+                    msg = msg + "s";
+                }
+            }
+                return msg + ", ";
+            }
+            return "";
+        }
+        function fnGetCountOfThisInInventory(name) {
+            var inv = localStorage.getItem("inv" + name);
+            if (inv) {
+                return inv;
+            }
+            else {
+                return 0;
+            }
+        }
+        function fnAddToInventory(name, inv) {
+            return localStorage.setItem("inv" + name, inv);
+        }
+        function fnNotifyUser(message)
+        {
+            localStorage.setItem("displaymsg", message);
+            //alert(message);
+        }
+        function fnGetDisplayMessage()
+        {
+            return localStorage.getItem("displaymsg");
+        }
+    </script>
+    <!--Helper functions-->
+    <script>
+        function fnIncrementCount(countname) {
+            var count = parseInt(localStorage.getItem(countname)) || 0;
+            count = count + 1;
+            localStorage.setItem(countname, count);
+        }
+        function stringIsEmpty(input) {
+            if (input == "null" || !input || input.trim() == "")
+                return true;
+            return false;
+        }
+        function fnGetCount(name) {
+            return parseInt(localStorage.getItem("count" + name)) || 0;
+        }
+        function getName() {
+            var name = prompt("Please enter your name");
+            if (stringIsEmpty(name)) {
+                name = "cancel";
+            }
+            return name;
+        }
+        // Check browser support
+        if (typeof (Storage) !== "undefined") {
+            fnStartApp();
+        }
+        else {
+            document.getElementById("r_name").innerHTML = "Sorry, your browser does not support Web Storage.";
+        }
+
+    </script>
+
+</body>
+</html>
+<!--https://www.qrstuff.com/-->

@@ -41,7 +41,7 @@
         .button {
             height: 20px;
             width: 120px;
-            background-color: dodgerblue;
+            background-color: black;
             border: 2px solid;
             color: white;
             text-align: center;
@@ -66,7 +66,7 @@
             <div id="r_name" style="color:white"></div>
 
             <div id="r_text"></div>
-            <div id="r_pic"></div>
+            <div id="r_pic" style="text-align:center"></div>
             <div id="r_choice1"></div>
             <div class="btngroup">
                 <div class="button" onclick="fnStartOver();" style="visibility:visible;">Start Over</div>
@@ -167,7 +167,7 @@
                 var invMap = fnGetCountOfThisInInventory("treasuremap");
                 var invShovel = fnGetCountOfThisInInventory("Shovel");
                 if (invMap && invMap > 0 && invShovel && invShovel > 0)
-                    fnNotifyUser("Yo ho ho, it's a bottle of rum! You can use this to buy some mateys to crew your ship!");
+                    fnNotifyUser("Yo ho ho, it's a bottle of rum! You can use this to buy some mates to crew your ship!");
                 return;
             }
             if (scans == 2) {
@@ -200,10 +200,10 @@
             var scans = fnGetCount("treasuremap");
             if (inv == 0) {
                 fnAddToInventory("treasuremap", 1);
-                fnNotifyUser("You found a Treasure Map!");
+                fnNotifyUser("Shiver me timbers!  You've found a Treasure Map!");
             }
             else {
-                fnNotifyUser("There is only one Treasure Map, and you already have it!");
+                fnNotifyUser("There's only one Treasure Map, and you're already carrying it!");
             }
         }
         function fncracker() {
@@ -212,7 +212,7 @@
             var scans = fnGetCount("cracker");
             if (inv == 0) {
                 fnAddToInventory("cracker", 1);
-                fnNotifyUser("You found a cracker!");
+                fnNotifyUser("You found a cracker! That's much better than hardtack!");
             }
             else {
                 fnAddToInventory("cracker", parseInt(inv) + 1);
@@ -237,23 +237,24 @@
                     fnAddToInventory("Rum", invrum-1);
                 }
                 else {
-                    msg = msg + ", but you need something to convince a crew to sail for you.";
+                    msg = msg + ", but you need something to persuade a crew to sail for you.";
                 }
             }
             else {
-                msg = msg + " but you don't know where to sail it to.  Google Maps doesn't exist yet. Find a treasure map and come back Matey.";
+                msg = msg + " but you don't know where to sail it to.  Google Maps doesn't exist yet. Find a treasure map then come back, Matey.";
             }
             fnNotifyUser(msg);
         }
         function fnParrot() {
             var msg = "";
             var inv = fnGetCountOfThisInInventory("Ship");
-            fnSetPicture("parrot");
             if (inv == 0) {
-                msg = msg + "An island exists somewhere in the ocean, but you will need a map, and a ship, to sail there.";
+                fnSetPicture("ship");
+                msg = msg + "An island exists somewhere in the ocean, but you'll need a map, and a ship, to sail there.";
                 fnNotifyUser(msg);
                 return;
             }
+            fnSetPicture("parrot");
             inv = fnGetCountOfThisInInventory("cracker");
             if (inv > 0) {
                 msg = msg + "You sailed the ship to the island with your motley crew.  You give Polly the Parrot a cracker so she won't follow you.";
@@ -267,35 +268,48 @@
         function fnTreasureChest() {
             var msg = "";
             var inv = fnGetCountOfThisInInventory("treasuremap");
-            fnSetPicture("treasurechest");
             if (inv == 0) {
-                msg = msg + "You can't find this treasure chest without first getting a treasure map in your hands.";
+                fnSetPicture("treasurechest");
+                msg = msg + "You'll have to find a treasure map before you can find this treasure.";
                 fnNotifyUser(msg);
                 return;
             }
             var inv = fnGetCountOfThisInInventory("Ship");
             if (inv == 0) {
-                msg = msg + "You need a ship before you can sail to the island that has this treasure chest.  Come back after you have commandeered that boat.";
+                fnSetPicture("ship");
+                msg = msg + "You need a ship before you can sail to the island that has a treasure chest.  Come back after you have commandeered that boat.";
                 fnNotifyUser(msg);
                 return;
             }
             var inv = fnGetCountOfThisInInventory("DefeatedParrot");
             if (inv == 0) {
-                msg = msg + "Shiver me timbers but his Parrot is raising a racket!  You need to distract it so you can sneak off and hunt for that booty!";
-                fnNotifyUser(msg);
-                return;
+                invcra = fnGetCountOfThisInInventory("cracker");
+                if (invcra > 0) {
+                    fnSetPicture("parrot");
+                    msg = msg + "Ya found a cracker, now go find that Parrot to give the cracker to the bird!";
+                    fnNotifyUser(msg);
+                    return;
+                }
+                else {
+                    fnSetPicture("parrot");
+                    msg = msg + "Shiver me timbers but this Parrot is raising a racket!  You need to distract it so you can sneak off and hunt for that booty!";
+                    fnNotifyUser(msg);
+                    return;
+                }
             }
             inv = fnGetCountOfThisInInventory("Shovel");
             if (inv == 0) {
-                msg = msg + "Blimey! You found where the treasure is buried.  But it is need under the sand.  You need a shovel!";
+                fnSetPicture("shovel");
+                msg = msg + "Blimey! You found where the treasure is buried, but it is under the sand.  You need a shovel!";
                 fnNotifyUser(msg);
                 return;
             }
+            fnSetPicture("treasurechest.gif");
             if (inv > 0) {
                 msg = msg + "Ahoy! With your shovel you uncover the chest full of Pieces of Eight and other booty!";
                 fnNotifyUser(msg);
             }
-            msg = "You did it!  You completed the Midwest GameFest 2019 Quest! Congratulations! You may also show this message to registration to be rewarded with a free raffle ticket!";
+            msg = "Smartly done!  You completed the Midwest GameFest 2019 Quest! Congratulations! You may show this message to registration to be rewarded with a free raffle ticket!";
             fnNotifyUser(msg);
         }
     </script>
@@ -303,6 +317,7 @@
     <script>
         function fnStartOver() {
             localStorage.clear();
+            fnSetPicture("");
             fnStartApp();
         }
         function fnAddToHistory(action) {
@@ -322,26 +337,26 @@
             localStorage.setItem("history", JSON.stringify(history));
         }
         function fnStartApp() {
-            var name = localStorage.getItem("name");
-            while (stringIsEmpty(name)) {
-                name = getName();
-                if (name == "cancel") {
-                    if (confirm("A name is required to play the game.  Press OK to leave the site or Cancel to stay and play.")) {
-                        window.location = "http://www.rpgkc.org/";
-                    }
-                    else {
-                        location.reload();
-                    }
-                }
-                else {
-                    localStorage.setItem("name", name);
-                }
-            }
+            //var name = localStorage.getItem("name");
+            //while (stringIsEmpty(name)) {
+            //    name = getName();
+            //    if (name == "cancel") {
+            //        if (confirm("A name is required to play the game.  Press OK to leave the site or Cancel to stay and play.")) {
+            //            window.location = "http://www.rpgkc.org/";
+            //        }
+            //        else {
+            //            location.reload();
+            //        }
+            //    }
+            //    else {
+            //        localStorage.setItem("name", name);
+            //    }
+            //}
             fnInvokeActionFromURL();
             fnUpdatePage();
         }
         function fnUpdatePage() {
-            document.getElementById("r_name").innerHTML = "Player Name: " + localStorage.getItem("name");
+            //document.getElementById("r_name").innerHTML = "Player Name: " + localStorage.getItem("name");
             //document.getElementById("r_history").innerHTML = JSON.parse(localStorage.getItem("history"));
             document.getElementById("r_inv").innerHTML = fnGetInventory();
             document.getElementById("r_text").innerHTML = fnGetDisplayMessage();
@@ -369,12 +384,20 @@
             while (elm.hasChildNodes()) {
                     elm.removeChild(elm.lastChild);
             }
+            if (picture == '')
+                return;
             var elem = document.createElement("img");
-            elem.setAttribute("src", "https://robkraft.azurewebsites.net/img/" + picture + ".png");
+            if (!contains(picture, '.'))
+                picture = picture + ".png";
+            elem.setAttribute("src", "https://robkraft.azurewebsites.net/img/" + picture);
             elem.setAttribute("height", "200");
             elem.setAttribute("width", "200");
-            elem.setAttribute("alt", "chest");
+            elem.setAttribute("alt", picture);
             elm.appendChild(elem);
+        }
+        function contains(value, searchFor)
+        {
+	        return (value || '').indexOf(searchFor) > -1;
         }
         function fnProcessURLAction(urlaction) {
             var action = fnGetSimpleNameForURLAction(urlaction);

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Midwest GameFest QR Code Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         html {
@@ -318,7 +318,9 @@
         function fnStartOver() {
             localStorage.clear();
             fnSetPicture("");
-            fnStartApp();
+            window.location = window.location.href.split("?")[0];
+            fnUpdatePage();
+            //fnStartApp();
         }
         function fnAddToHistory(action) {
             fnIncrementCount("countAll");
@@ -337,21 +339,24 @@
             localStorage.setItem("history", JSON.stringify(history));
         }
         function fnStartApp() {
-            //var name = localStorage.getItem("name");
-            //while (stringIsEmpty(name)) {
+            var name = localStorage.getItem("name");
+            while (stringIsEmpty(name)) {
+                name = "startover";
             //    name = getName();
             //    if (name == "cancel") {
             //        if (confirm("A name is required to play the game.  Press OK to leave the site or Cancel to stay and play.")) {
             //            window.location = "http://www.rpgkc.org/";
             //        }
             //        else {
-            //            location.reload();
+                location.reload();
+                //window.location = window.location.href.split("?")[0];
             //        }
             //    }
             //    else {
-            //        localStorage.setItem("name", name);
+                    localStorage.setItem("name", name);
             //    }
-            //}
+            }
+            
             fnInvokeActionFromURL();
             fnUpdatePage();
         }
@@ -389,7 +394,7 @@
             var elem = document.createElement("img");
             if (!contains(picture, '.'))
                 picture = picture + ".png";
-            elem.setAttribute("src", "https://robkraft.azurewebsites.net/img/" + picture);
+            elem.setAttribute("src", "img/" + picture);
             elem.setAttribute("height", "200");
             elem.setAttribute("width", "200");
             elem.setAttribute("alt", picture);
